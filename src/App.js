@@ -22,10 +22,10 @@ function App() {
 const [movies,setMovies]=useState([])
 
 
-const moviesHandler=()=>{
-  fetch('https://swapi.dev/api/films/')
-  .then(response=>{ return response.json()})
-  .then(data=>{
+async function fetchMoviesHandler(){
+  const response= await fetch('https://swapi.dev/api/films/') // equal to = .then(response=>{ return response.json()})
+  const data=await response.json(); //.then(data=>{})
+  
 
     const transformedMovies=data.results.map(moviesData=>{
 
@@ -39,17 +39,16 @@ const moviesHandler=()=>{
     })
 
     setMovies(transformedMovies)
-  })
+ 
+  }
+    
 
-
-
-}
 
 
   return (
     <React.Fragment>
       <section>
-        <button onClick={moviesHandler}>Fetch Movies</button>
+        <button onClick={fetchMoviesHandler}>Fetch Movies</button>
       </section>
       <section>
         <MoviesList movies={movies} />
