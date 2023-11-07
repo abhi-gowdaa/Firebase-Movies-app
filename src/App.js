@@ -29,12 +29,13 @@ async function fetchMoviesHandler(){
   setError(null);
 
   try{
-  const response= await fetch('https://swapi.dev/api/film/') // equal to = .then(response=>{ return response.json()})
-  const data=await response.json(); //.then(data=>{})
-  
-  if(!response.ok){
+  const response= await fetch('https://swapi.dev/api/films/') // equal to = .then(response=>{ return response.json()})
+ 
+  if(!response.ok){                               //before parse json check this
     throw new Error('something went wrong')
   }
+  const data=await response.json(); //.then(data=>{})
+  
 
     const transformedMovies=data.results.map(moviesData=>{
 
@@ -60,20 +61,29 @@ catch(error){
 
 }
 
+let content=<p>Found no Movies</p>
+
+if(movies.length>0){
+content=<MoviesList movies={movies} />
+
+}
+
+if(error){
+  content=<p>{error}</p>
+  
+}
+
+if(isloading){
+  content=<p>Loading...</p>
+  
+}
 
   return (
     <React.Fragment>
       <section>
         <button onClick={fetchMoviesHandler}>Fetch Movies</button>
       </section>
-      <section>
-        {!isloading && movies.length>0 &&  <MoviesList movies={movies} /> }
-       {!isloading && movies.length===0 && <p> Found no Movies</p>}
-       {!isloading && error&& <p>{error}</p>}
-       {isloading &&  <p>Loading...</p>}
-      
-
-      </section>   
+      <section>{content}</section>   
     </React.Fragment>
   );
 }
