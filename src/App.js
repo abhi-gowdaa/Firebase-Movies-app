@@ -3,8 +3,8 @@ import AddMovie from './components/AddMovie';
 import MoviesList from './components/MoviesList';
 import './App.css';
 import { useCallback } from 'react';
- 
-
+import dotenv from 'dotenv'
+dotenv.config();
 
 function App() {
   // const dummyMovies = [
@@ -32,7 +32,7 @@ const fetchMoviesHandler=useCallback(async()=>{
   setError(null);
 
   try{
-  const response= await fetch('') // equal to = .then(response=>{ return response.json()})
+  const response= await fetch(process.env.REACT_APP_DOTENV_KEY) // equal to = .then(response=>{ return response.json()})
  
   if(!response.ok){                               //before parse json check this
     throw new Error('something went wrong');
@@ -75,11 +75,11 @@ useEffect(()=>{
 
 
 async function addMovieHandler(movie) {
-  const response=await fetch('',{
+  const response=await fetch(process.env.REACT_APP_DOTENV_KEY,{
     method:'POST',
     headers: {
       "Content-Type": "application/json",
-     
+      // 'Content-Type': 'application/x-www-form-urlencoded',
     },
     body: JSON.stringify(movie), // body data type must match "Content-Type" header
   });
