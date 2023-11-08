@@ -79,7 +79,7 @@ async function addMovieHandler(movie) {
     method:'POST',
     headers: {
       "Content-Type": "application/json",
-      // 'Content-Type': 'application/x-www-form-urlencoded',
+     
     },
     body: JSON.stringify(movie), // body data type must match "Content-Type" header
   });
