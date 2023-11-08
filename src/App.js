@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
-
+import AddMovie from './components/AddMovie';
 import MoviesList from './components/MoviesList';
 import './App.css';
 import { useCallback } from 'react';
+ 
+
 
 function App() {
   // const dummyMovies = [
@@ -30,26 +32,29 @@ const fetchMoviesHandler=useCallback(async()=>{
   setError(null);
 
   try{
-  const response= await fetch('https://swapi.dev/api/films/') // equal to = .then(response=>{ return response.json()})
+  const response= await fetch('') // equal to = .then(response=>{ return response.json()})
  
   if(!response.ok){                               //before parse json check this
-    throw new Error('something went wrong')
+    throw new Error('something went wrong');
   }
   const data=await response.json(); //.then(data=>{})
   
+  // console.log(data)
+const loadedMovies=[]
 
-    const transformedMovies=data.results.map(moviesData=>{
 
-      return{
-        id:moviesData.episode_id,
-        title:moviesData.title,
-        openingText:moviesData.opening_crawl,
-        releaseDate:moviesData.release_date,
+for(let key in data){
+  loadedMovies.push({
+    id:key,
+    title:data[key].title,
+    openingText:data[key].openingText,
+    releaseDate:data[key].releaseDate
 
-      }
-    })
-
-   setMovies(transformedMovies)
+  })
+}
+    
+   setMovies(loadedMovies)
+  
     setIsLoading(false)
  
   }
@@ -61,6 +66,7 @@ catch(error){
  setIsLoading(false)
 
 },[])
+
 useEffect(()=>{
   fetchMoviesHandler()
 },[fetchMoviesHandler])
@@ -68,12 +74,29 @@ useEffect(()=>{
 
 
 
+async function addMovieHandler(movie) {
+  const response=await fetch('',{
+    method:'POST',
+    headers: {
+      "Content-Type": "application/json",
+      // 'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: JSON.stringify(movie), // body data type must match "Content-Type" header
+  });
+
+const data=await response.json();
+console.log(data.name)
+
+  }
+
+ 
 let content=<p>Found no Movies</p>
 
 if(movies.length>0){
 content=<MoviesList movies={movies} />
 
 }
+
 
 if(error){
   content=<p>{error}</p>
@@ -87,6 +110,9 @@ if(isloading){
 
   return (
     <React.Fragment>
+        <section>
+        <AddMovie onAddMovie={addMovieHandler} />
+      </section>
       <section>
         <button onClick={fetchMoviesHandler}>Fetch Movies</button>
       </section>
